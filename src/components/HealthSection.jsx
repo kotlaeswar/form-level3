@@ -1,4 +1,4 @@
-// src/components/HealthSection.js
+// src/components/HealthSection.jsx
 import React from 'react';
 
 const HealthSection = ({ values, handleChange, errors }) => (
@@ -12,7 +12,7 @@ const HealthSection = ({ values, handleChange, errors }) => (
         <option value="Monthly">Monthly</option>
         <option value="Rarely">Rarely</option>
       </select>
-      {errors.exerciseFrequency && <p>{errors.exerciseFrequency}</p>}
+      {errors.exerciseFrequency && <p className="error">{errors.exerciseFrequency}</p>}
     </div>
     <div>
       <label>Diet Preference</label>
@@ -22,7 +22,7 @@ const HealthSection = ({ values, handleChange, errors }) => (
         <option value="Vegan">Vegan</option>
         <option value="Non-Vegetarian">Non-Vegetarian</option>
       </select>
-      {errors.dietPreference && <p>{errors.dietPreference}</p>}
+      {errors.dietPreference && <p className="error">{errors.dietPreference}</p>}
     </div>
   </div>
 );

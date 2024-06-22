@@ -1,43 +1,51 @@
-// src/components/Summary.js
+// src/components/Summary.jsx
 import React from 'react';
+import { Navigate } from 'react-router-dom';
+import './Summary.css';
 
-const Summary = ({ values, additionalQuestions, loading, error }) => (
-  <div>
-    <h2>Summary</h2>
-    <p><strong>Full Name:</strong> {values.fullName}</p>
-    <p><strong>Email:</strong> {values.email}</p>
-    <p><strong>Survey Topic:</strong> {values.surveyTopic}</p>
-    {values.surveyTopic === 'Technology' && (
-      <>
-        <p><strong>Favorite Programming Language:</strong> {values.favoriteLanguage}</p>
-        <p><strong>Years of Experience:</strong> {values.yearsOfExperience}</p>
-      </>
-    )}
-    {values.surveyTopic === 'Health' && (
-      <>
-        <p><strong>Exercise Frequency:</strong> {values.exerciseFrequency}</p>
-        <p><strong>Diet Preference:</strong> {values.dietPreference}</p>
-      </>
-    )}
-    {values.surveyTopic === 'Education' && (
-      <>
-        <p><strong>Highest Qualification:</strong> {values.highestQualification}</p>
-        <p><strong>Field of Study:</strong> {values.fieldOfStudy}</p>
-      </>
-    )}
-    <p><strong>Feedback:</strong> {values.feedback}</p>
+const Summary = ({ formData }) => {
+  if (!formData) {
+    return <Navigate to="/" />;
+  }
 
-    <h3>Additional Questions</h3>
-    {loading && <p>Loading...</p>}
-    {error && <p>Error fetching additional questions: {error.message}</p>}
-    {additionalQuestions && (
-      <ul>
-        {additionalQuestions.map((question, index) => (
-          <li key={index}>{question}</li>
-        ))}
-      </ul>
-    )}
-  </div>
-);
+  return (
+    <div className="summary">
+      <h2>Application Summary</h2>
+      <p><strong>Full Name:</strong> {formData.fullName}</p>
+      <p><strong>Email:</strong> {formData.email}</p>
+      <p><strong>Survey Topic:</strong> {formData.surveyTopic}</p>
+      {formData.surveyTopic === 'Technology' && (
+        <>
+          <p><strong>Favorite Programming Language:</strong> {formData.favoriteLanguage}</p>
+          <p><strong>Years of Experience:</strong> {formData.yearsOfExperience}</p>
+        </>
+      )}
+      {formData.surveyTopic === 'Health' && (
+        <>
+          <p><strong>Exercise Frequency:</strong> {formData.exerciseFrequency}</p>
+          <p><strong>Diet Preference:</strong> {formData.dietPreference}</p>
+        </>
+      )}
+      {formData.surveyTopic === 'Education' && (
+        <>
+          <p><strong>Highest Qualification:</strong> {formData.highestQualification}</p>
+          <p><strong>Field of Study:</strong> {formData.fieldOfStudy}</p>
+        </>
+      )}
+      <p><strong>Feedback:</strong> {formData.feedback}</p>
+
+      <h3>Additional Questions</h3>
+      {formData.additionalQuestions.length > 0 ? (
+        <ul>
+          {formData.additionalQuestions.map((question, index) => (
+            <li key={index}>{question}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No additional questions</p>
+      )}
+    </div>
+  );
+};
 
 export default Summary;

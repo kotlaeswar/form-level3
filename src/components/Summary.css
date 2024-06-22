@@ -1,0 +1,23 @@
+/* src/components/Summary.css */
+.summary {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #f9f9f9;
+  }
+  
+  .summary h2 {
+    text-align: center;
+  }
+  
+  .summary p {
+    margin-bottom: 10px;
+  }
+  
+  .summary strong {
+    display: inline-block;
+    width: 150px;
+  }
+  

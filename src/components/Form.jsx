@@ -1,44 +1,39 @@
-// src/components/Form.js
-import React, { useState } from 'react';
+// src/components/Form.jsx
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useForm from '../hooks/useForm';
-import useFetch from '../hooks/useFetch';
 import TechnologySection from './TechnologySection';
-import HealthSection from './HealthSection';
 import EducationSection from './EducationSection';
-import Summary from './Summary';
+import HealthSection from './HealthSection';
 import './Form.css';
 
-const validate = (values) => {
-  const errors = {};
-  if (!values.fullName) errors.fullName = 'Full Name is required';
-  if (!values.email) {
-    errors.email = 'Email is required';
-  } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-    errors.email = 'Email address is invalid';
-  }
-  if (!values.surveyTopic) errors.surveyTopic = 'Survey Topic is required';
-  if (values.surveyTopic === 'Technology') {
-    if (!values.favoriteLanguage) errors.favoriteLanguage = 'Favorite Programming Language is required';
-    if (!values.yearsOfExperience) errors.yearsOfExperience = 'Years of Experience is required';
-  }
-  if (values.surveyTopic === 'Health') {
-    if (!values.exerciseFrequency) errors.exerciseFrequency = 'Exercise Frequency is required';
-    if (!values.dietPreference) errors.dietPreference = 'Diet Preference is required';
-  }
-  if (values.surveyTopic === 'Education') {
-    if (!values.highestQualification) errors.highestQualification = 'Highest Qualification is required';
-    if (!values.fieldOfStudy) errors.fieldOfStudy = 'Field of Study is required';
-  }
-  if (!values.feedback) {
-    errors.feedback = 'Feedback is required';
-  } else if (values.feedback.length < 50) {
-    errors.feedback = 'Feedback must be at least 50 characters long';
-  }
-  return errors;
-};
+const Form = ({ setFormData }) => {
+  const navigate = useNavigate();
+  const [additionalQuestions, setAdditionalQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-const Form = () => {
-  const initialState = {
+  const validateForm = (values) => {
+    const errors = {};
+    if (!values.fullName) errors.fullName = 'Full Name is required';
+    if (!values.email) errors.email = 'Email is required';
+    if (!values.surveyTopic) errors.surveyTopic = 'Survey Topic is required';
+    if (values.surveyTopic === 'Technology') {
+      if (!values.favoriteLanguage) errors.favoriteLanguage = 'Favorite Language is required';
+      if (!values.yearsOfExperience) errors.yearsOfExperience = 'Years of Experience is required';
+    }
+    if (values.surveyTopic === 'Health') {
+      if (!values.exerciseFrequency) errors.exerciseFrequency = 'Exercise Frequency is required';
+      if (!values.dietPreference) errors.dietPreference = 'Diet Preference is required';
+    }
+    if (values.surveyTopic === 'Education') {
+      if (!values.highestQualification) errors.highestQualification = 'Highest Qualification is required';
+      if (!values.fieldOfStudy) errors.fieldOfStudy = 'Field of Study is required';
+    }
+    return errors;
+  };
+
+  const { values, errors, handleChange, handleSubmit } = useForm({
     fullName: '',
     email: '',
     surveyTopic: '',
@@ -48,63 +43,92 @@ const Form = () => {
     dietPreference: '',
     highestQualification: '',
     fieldOfStudy: '',
-    feedback: '',
-  };
+    feedback: ''
+  }, validateForm);
 
-  const { values, errors, handleChange, handleSubmit } = useForm(initialState, validate);
-  const [showSummary, setShowSummary] = useState(false);
+  useEffect(() => {
+    const fetchQuestions = async (topic) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`http://localhost:3001/${topic}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const questions = await response.json();
+        setAdditionalQuestions(questions);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const { data: additionalQuestions, loading, error } = useFetch(
-    values.surveyTopic ? `http://localhost:3001/${values.surveyTopic}` : null
-  );
+    if (values.surveyTopic) {
+      fetchQuestions(values.surveyTopic);
+    } else {
+      setAdditionalQuestions([]);
+    }
+  }, [values.surveyTopic]);
 
   const onSubmit = () => {
-    setShowSummary(true);
+    setFormData({ ...values, additionalQuestions });
+    navigate('/summary');
   };
 
   return (
-    <div className="form-container">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="form-group">
-          <label>Full Name</label>
-          <input type="text" name="fullName" value={values.fullName} onChange={handleChange} className="input-field" />
-          {errors.fullName && <p className="error-message">{errors.fullName}</p>}
-        </div>
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" name="email" value={values.email} onChange={handleChange} className="input-field" />
-          {errors.email && <p className="error-message">{errors.email}</p>}
-        </div>
-        <div className="form-group">
-          <label>Survey Topic</label>
-          <select name="surveyTopic" value={values.surveyTopic} onChange={handleChange} className="select-field">
-            <option value="">Select</option>
-            <option value="Technology">Technology</option>
-            <option value="Health">Health</option>
-            <option value="Education">Education</option>
-          </select>
-          {errors.surveyTopic && <p className="error-message">{errors.surveyTopic}</p>}
-        </div>
-        {values.surveyTopic === 'Technology' && (
-          <TechnologySection values={values} handleChange={handleChange} errors={errors} />
-        )}
-        {values.surveyTopic === 'Health' && (
-          <HealthSection values={values} handleChange={handleChange} errors={errors} />
-        )}
-        {values.surveyTopic === 'Education' && (
-          <EducationSection values={values} handleChange={handleChange} errors={errors} />
-        )}
-        <div className="form-group">
-          <label>Feedback</label>
-          <textarea name="feedback" value={values.feedback} onChange={handleChange} className="textarea-field" />
-          {errors.feedback && <p className="error-message">{errors.feedback}</p>}
-        </div>
-        <button type="submit" className="button">Submit</button>
-      </form>
-      {showSummary && (
-        <Summary values={values} additionalQuestions={additionalQuestions} loading={loading} error={error} />
+    <form onSubmit={handleSubmit(onSubmit)} className="form">
+      <div>
+        <label>Full Name</label>
+        <input type="text" name="fullName" value={values.fullName} onChange={handleChange} />
+        {errors.fullName && <p className="error">{errors.fullName}</p>}
+      </div>
+      <div>
+        <label>Email</label>
+        <input type="email" name="email" value={values.email} onChange={handleChange} />
+        {errors.email && <p className="error">{errors.email}</p>}
+      </div>
+      <div>
+        <label>Survey Topic</label>
+        <select name="surveyTopic" value={values.surveyTopic} onChange={handleChange}>
+          <option value="">Select</option>
+          <option value="Technology">Technology</option>
+          <option value="Health">Health</option>
+          <option value="Education">Education</option>
+        </select>
+        {errors.surveyTopic && <p className="error">{errors.surveyTopic}</p>}
+      </div>
+
+      {values.surveyTopic === 'Technology' && (
+        <TechnologySection values={values} handleChange={handleChange} errors={errors} />
       )}
-    </div>
+      {values.surveyTopic === 'Health' && (
+        <HealthSection values={values} handleChange={handleChange} errors={errors} />
+      )}
+      {values.surveyTopic === 'Education' && (
+        <EducationSection values={values} handleChange={handleChange} errors={errors} />
+      )}
+
+      <div>
+        <label>Feedback</label>
+        <textarea name="feedback" value={values.feedback} onChange={handleChange} />
+      </div>
+
+      <button type="submit">Submit</button>
+
+      {loading && <p>Loading additional questions...</p>}
+      {error && <p>Error: {error}</p>}
+      {additionalQuestions.length > 0 && (
+        <div>
+          {/* <h3>Additional Questions</h3>
+          <ul>
+            {additionalQuestions.map((question, index) => (
+              <li key={index}>{question}</li>
+            ))}
+          </ul> */}
+        </div>
+      )}
+    </form>
   );
 };
 

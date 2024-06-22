@@ -1,4 +1,4 @@
-/* Form Styles */
+/* Form Styles
 .form-container {
     max-width: 500px;
     margin: 0 auto;
@@ -71,9 +71,47 @@
   }
   
   /* Form Layout */
-  @media (max-width: 768px) {
-    .form-container {
-      max-width: 90%;
-    }
-  }
-  
+
+
+/* src/components/Form.css */
+.form {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #f9f9f9;
+}
+
+.form div {
+  margin-bottom: 10px;
+}
+
+.form label {
+  display: block;
+  font-weight: bold;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+}
+
+.form button {
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form .error {
+  color: red;
+  font-size: 0.9em;
+}
+
+ 
