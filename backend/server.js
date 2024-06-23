@@ -6,6 +6,10 @@ const port = 3001;
 
 app.use(cors());
 
+app.get('/', (req, res) => {
+  res.send('Welcome to the Survey API');
+});
+
 app.get('/:surveyTopic', (req, res) => {
   const surveyTopic = req.params.surveyTopic;
   let response;
