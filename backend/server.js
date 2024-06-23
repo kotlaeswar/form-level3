@@ -32,5 +32,6 @@ app.get('/:surveyTopic', (req, res) => {
 });
 
 app.listen(port, () => {
+  res.send('Welcome to the Survey API');
   console.log(`Server is running on http://localhost:${port}`);
 });
