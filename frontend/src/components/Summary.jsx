@@ -32,7 +32,7 @@ const Summary = ({ formData }) => {
           <p><strong>Field of Study:</strong> {formData.fieldOfStudy}</p>
         </>
       )}
-      <p><strong>Feedback:</strong> {formData.feedback}</p>
+      <p className='febbreak'><strong>Feedback:</strong> {formData.feedback}</p>
 
       <h3>Additional Questions</h3>
       {formData.additionalQuestions.length > 0 ? (

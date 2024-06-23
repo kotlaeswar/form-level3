@@ -51,7 +51,8 @@ const Form = ({ setFormData }) => {
     
       setError(null);
       try {
-        const response = await fetch(`https://form-level3-6cdg.vercel.app/${topic}`);
+        const response = await fetch(` http://localhost:3001/${topic}`);
+        // const response = await fetch(`https://form-level3-6cdg.vercel.app/${topic}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -94,7 +95,7 @@ const Form = ({ setFormData }) => {
           <option value="Health">Health</option>
           <option value="Education">Education</option>
         </select>
-        {errors.surveyTopic && <p className="error">{errors.surveyTopic}</p>}
+        {/* {errors.surveyTopic && <p className="error">{errors.surveyTopic}</p>} */}
       </div>
 
       {values.surveyTopic === 'Technology' && (
