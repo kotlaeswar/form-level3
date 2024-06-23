@@ -28,8 +28,7 @@ body {
 }
 
 .form input,
-.form select
- {
+.form select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
@@ -37,11 +36,10 @@ body {
   border-radius: 9999px;
   padding: 10px 20px;
 }
+
 .form textarea {
   width: 100%;
- 
 }
-
 
 .form button {
   padding: 10px 20px;
@@ -56,6 +54,7 @@ body {
   color: red;
   font-size: 0.9em;
 }
+
 button {
   padding: 15px 25px;
   border: unset;
@@ -95,5 +94,32 @@ button:hover::before {
   width: 100%;
 }
 
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+  body {
+    flex-direction: column;
+    padding: 20px;
+  }
 
- 
+  .form {
+    width: 100%;
+    max-width: none;
+    padding: 10px;
+    box-shadow: none;
+  }
+
+  .form div {
+    width: 100%;
+  }
+
+  .form input,
+  .form select,
+  .form textarea {
+    padding: 8px 10px;
+  }
+
+  button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
