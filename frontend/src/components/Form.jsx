@@ -10,7 +10,7 @@ import './Form.css';
 const Form = ({ setFormData }) => {
   const navigate = useNavigate();
   const [additionalQuestions, setAdditionalQuestions] = useState([]);
-  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState(null);
 
   const validateForm = (values) => {
@@ -48,7 +48,7 @@ const Form = ({ setFormData }) => {
 
   useEffect(() => {
     const fetchQuestions = async (topic) => {
-      setLoading(true);
+    
       setError(null);
       try {
         const response = await fetch(`https://form-level3-6cdg.vercel.app/${topic}`);
@@ -59,9 +59,7 @@ const Form = ({ setFormData }) => {
         setAdditionalQuestions(questions);
       } catch (error) {
         setError(error.message);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
 
     if (values.surveyTopic) {
@@ -114,9 +112,9 @@ const Form = ({ setFormData }) => {
         <textarea name="feedback" value={values.feedback} onChange={handleChange} />
       </div>
 
-      <button type="submit">Submit</button>
+     <center><button type="submit">Submit</button></center> 
 
-      {loading && <p>Loading additional questions...</p>}
+      
       {error && <p>Error: {error}</p>}
       {additionalQuestions.length > 0 && (
         <div>
